@@ -51,24 +51,20 @@
       justify-content: space-between;
       align-items: center;
     }
-    .input-row {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 8px;
-    }
     label { font-size: 0.85rem; color: var(--text-sub); font-weight: 500; }
     input[type="number"] {
       width: 100%;
-      padding: 10px 12px;
+      padding: 8px 10px;
       border: 1.5px solid var(--border);
-      border-radius: 10px;
+      border-radius: 8px;
       font-size: 1.1rem;
       font-weight: 600;
       background: #fdfdfd;
       color: var(--text);
+      margin-top: 4px;
     }
     input[type="number"]:focus { outline: none; border-color: var(--primary); }
+    
     .pill-group {
       display: flex;
       gap: 6px;
@@ -85,12 +81,23 @@
       text-align: center;
       font-weight: 600;
       cursor: pointer;
+      color: var(--text-sub);
     }
     .pill-btn.active {
       background: var(--primary);
       color: #fff;
       border-color: var(--primary);
     }
+    
+    /* 來源切換按鈕樣式 */
+    .src-group { display: flex; gap: 4px; margin-bottom: 8px; align-items: center; }
+    .src-label { font-size: 0.75rem; color: #94a3b8; margin-right: 4px; font-weight: 600;}
+    .src-btn {
+      padding: 4px 12px; border: 1px solid var(--border); border-radius: 6px; 
+      font-size: 0.75rem; font-weight: 600; background: #fff; color: var(--text-sub);
+    }
+    .src-btn.active { background: #475569; color: #fff; border-color: #475569; }
+
     .chip {
       padding: 5px 10px;
       border-radius: 16px;
@@ -132,14 +139,12 @@
       right: 0;
       background: #0f172a;
       color: white;
-      padding: 12px 18px;
+      padding: 12px 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.9rem;
       box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
     }
-    .bottom-val { font-size: 1.1rem; font-weight: 700; color: #38bdf8; }
   </style>
 </head>
 <body>
@@ -149,11 +154,15 @@
     <span style="font-size: 0.8rem; color: var(--text-sub);">單位: ×10⁶/mL</span>
   </header>
 
-  <!-- 原液濃度輸入 -->
-  <div class="card" style="border-left: 4px solid var(--primary);">
-    <label>目前測得原液濃度 (M = ×10⁶ cells/mL)</label>
-    <div style="margin-top: 6px;">
-      <input type="number" step="0.01" v-model.number="currentConc" placeholder="例如: 3.5">
+  <!-- 原液濃度輸入 (並排) -->
+  <div class="card" style="border-left: 4px solid var(--primary); display: flex; gap: 12px;">
+    <div style="flex: 1;">
+      <label>原液 1 濃度</label>
+      <input type="number" step="0.01" v-model.number="conc1" placeholder="M">
+    </div>
+    <div style="flex: 1;">
+      <label>原液 2 濃度</label>
+      <input type="number" step="0.01" v-model.number="conc2" placeholder="M">
     </div>
   </div>
 
@@ -164,31 +173,39 @@
       <span style="font-size:0.8rem; font-weight:normal;">{{ seedingFlasks.length }} 瓶</span>
     </div>
 
-    <div v-for="(flask, idx) in seedingFlasks" :key="'seed-'+idx" style="margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed var(--border);">
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:600;">
-        <span>瓶 #{{ idx + 1 }}</span>
-        <button class="del-btn" v-if="seedingFlasks.length > 1" @click="seedingFlasks.splice(idx, 1)">刪除</button>
+    <div v-for="(flask, idx) in seedingFlasks" :key="'seed-'+idx" style="margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px dashed var(--border);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+        <span style="font-size:0.85rem; font-weight:700; color:#334155;">瓶 #{{ idx + 1 }}</span>
+        <button class="del-btn" @click="seedingFlasks.splice(idx, 1)">刪除</button>
       </div>
+      
+      <!-- 選擇來源原液 -->
+      <div class="src-group">
+        <span class="src-label">細胞來源:</span>
+        <button class="src-btn" :class="{active: flask.source === 1}" @click="flask.source = 1">原液 1</button>
+        <button class="src-btn" :class="{active: flask.source === 2}" @click="flask.source = 2">原液 2</button>
+      </div>
+
       <!-- 天數選擇 -->
       <div class="pill-group">
-        <button class="pill-btn" :class="{active: flask.days === 2}" @click="setSeedingDays(flask, 2)">2天 (0.8M)</button>
-        <button class="pill-btn" :class="{active: flask.days === 3}" @click="setSeedingDays(flask, 3)">3天 (0.25M)</button>
-        <button class="pill-btn" :class="{active: flask.days === 4}" @click="setSeedingDays(flask, 4)">4天 (0.15M)</button>
+        <button class="pill-btn" :class="{active: flask.days === 2}" @click="setDays(flask, 2)">2天(0.8M)</button>
+        <button class="pill-btn" :class="{active: flask.days === 3}" @click="setDays(flask, 3)">3天(0.25M)</button>
+        <button class="pill-btn" :class="{active: flask.days === 4}" @click="setDays(flask, 4)">4天(0.15M)</button>
       </div>
 
       <!-- 計算結果 -->
-      <div class="result-box" v-if="currentConc > 0">
+      <div class="result-box" v-if="getConc(flask.source) > 0">
         <div class="result-line">
-          <span>取原液：</span>
-          <span class="highlight-cell">{{ calcVolume(50, flask.targetConc).cell }} mL</span>
+          <span>取原液 {{ flask.source }}：</span>
+          <span class="highlight-cell">{{ calcVolume(flask, 50).cell }} mL</span>
         </div>
         <div class="result-line">
           <span>補培養基：</span>
-          <span class="highlight-media">{{ calcVolume(50, flask.targetConc).media }} mL</span>
+          <span class="highlight-media">{{ calcVolume(flask, 50).media }} mL</span>
         </div>
       </div>
     </div>
-    <button class="btn-add" style="margin-top: 6px;" @click="seedingFlasks.push({ days: 3, targetConc: 0.25 })">＋ 增加一瓶 Seeding</button>
+    <button class="btn-add" @click="seedingFlasks.push({ days: 3, targetConc: 0.25, source: 1 })">＋ 增加一瓶 Seeding</button>
   </div>
 
   <!-- 放大區塊 (Scale-up) -->
@@ -198,14 +215,21 @@
       <span style="font-size:0.8rem; font-weight:normal;">{{ scaleFlasks.length }} 瓶</span>
     </div>
 
-    <div v-for="(flask, idx) in scaleFlasks" :key="'scale-'+idx" style="margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px dashed var(--border);">
-      <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:600; margin-bottom: 6px;">
-        <span>放大瓶 #{{ idx + 1 }}</span>
+    <div v-for="(flask, idx) in scaleFlasks" :key="'scale-'+idx" style="margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px dashed var(--border);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+        <span style="font-size:0.85rem; font-weight:700; color:#334155;">放大瓶 #{{ idx + 1 }}</span>
         <button class="del-btn" @click="scaleFlasks.splice(idx, 1)">移除</button>
       </div>
 
+      <!-- 選擇來源原液 -->
+      <div class="src-group">
+        <span class="src-label">細胞來源:</span>
+        <button class="src-btn" :class="{active: flask.source === 1}" @click="flask.source = 1">原液 1</button>
+        <button class="src-btn" :class="{active: flask.source === 2}" @click="flask.source = 2">原液 2</button>
+      </div>
+
       <!-- 快捷容積選擇 -->
-      <label>設定總體積 (mL)</label>
+      <div style="font-size: 0.75rem; color: #64748b; font-weight: 600; margin-top: 8px;">設定總體積 (mL)</div>
       <div class="pill-group" style="margin: 4px 0 8px;">
         <button v-for="v in [200, 250, 300, 350, 400, 900]" :key="v" 
                 class="chip" :class="{active: flask.volume === v}" 
@@ -214,39 +238,45 @@
 
       <!-- 目標天數選擇 -->
       <div class="pill-group">
-        <button class="pill-btn" :class="{active: flask.days === 2}" @click="setScaleDays(flask, 2)">2天 (0.8M)</button>
-        <button class="pill-btn" :class="{active: flask.days === 3}" @click="setScaleDays(flask, 3)">3天 (0.25M)</button>
-        <button class="pill-btn" :class="{active: flask.days === 4}" @click="setScaleDays(flask, 4)">4天 (0.15M)</button>
+        <button class="pill-btn" :class="{active: flask.days === 2}" @click="setDays(flask, 2)">2天(0.8M)</button>
+        <button class="pill-btn" :class="{active: flask.days === 3}" @click="setDays(flask, 3)">3天(0.25M)</button>
+        <button class="pill-btn" :class="{active: flask.days === 4}" @click="setDays(flask, 4)">4天(0.15M)</button>
       </div>
 
       <!-- 計算結果 -->
-      <div class="result-box" v-if="currentConc > 0">
+      <div class="result-box" v-if="getConc(flask.source) > 0">
         <div class="result-line">
-          <span>目標體積：{{ flask.volume }} mL ({{ flask.targetConc }}M)</span>
+          <span style="font-size:0.8rem; color:#64748b;">目標體積：{{ flask.volume }} mL ({{ flask.targetConc }}M)</span>
         </div>
         <div class="result-line">
-          <span>取原液：</span>
-          <span class="highlight-cell">{{ calcVolume(flask.volume, flask.targetConc).cell }} mL</span>
+          <span>取原液 {{ flask.source }}：</span>
+          <span class="highlight-cell">{{ calcVolume(flask, flask.volume).cell }} mL</span>
         </div>
         <div class="result-line">
           <span>補培養基：</span>
-          <span class="highlight-media">{{ calcVolume(flask.volume, flask.targetConc).media }} mL</span>
+          <span class="highlight-media">{{ calcVolume(flask, flask.volume).media }} mL</span>
         </div>
       </div>
     </div>
 
-    <button class="btn-add" @click="scaleFlasks.push({ volume: 250, days: 3, targetConc: 0.25 })">＋ 新增放大瓶</button>
+    <button class="btn-add" @click="scaleFlasks.push({ volume: 250, days: 3, targetConc: 0.25, source: 1 })">＋ 新增放大瓶</button>
   </div>
 
   <!-- 底部即時總結列 -->
   <div class="bottom-bar">
-    <div>
-      <div style="font-size:0.75rem; color:#94a3b8;">總需原液 (Cell)</div>
-      <div class="bottom-val">{{ totalCellVolume }} <span style="font-size:0.8rem">mL</span></div>
+    <div style="display:flex; gap: 16px;">
+      <div>
+        <div style="font-size:0.7rem; color:#94a3b8;">總需原液 1</div>
+        <div style="font-size:1.1rem; font-weight:700; color:#38bdf8;">{{ totalCell1 }} <span style="font-size:0.7rem">mL</span></div>
+      </div>
+      <div>
+        <div style="font-size:0.7rem; color:#94a3b8;">總需原液 2</div>
+        <div style="font-size:1.1rem; font-weight:700; color:#38bdf8;">{{ totalCell2 }} <span style="font-size:0.7rem">mL</span></div>
+      </div>
     </div>
-    <div>
-      <div style="font-size:0.75rem; color:#94a3b8;">總需新鮮培養基 (Media)</div>
-      <div class="bottom-val" style="color: #6ee7b7;">{{ totalMediaVolume }} <span style="font-size:0.8rem">mL</span></div>
+    <div style="text-align: right;">
+      <div style="font-size:0.75rem; color:#94a3b8;">總補培養基</div>
+      <div style="font-size:1.1rem; font-weight:700; color: #6ee7b7;">{{ totalMedia }} <span style="font-size:0.8rem">mL</span></div>
     </div>
   </div>
 </div>
@@ -255,65 +285,71 @@
   const { createApp, ref, computed } = Vue;
   createApp({
     setup() {
-      const currentConc = ref('');
-      // 預設 2 瓶 seeding (預設 3 天 0.25M)
+      const conc1 = ref('');
+      const conc2 = ref('');
+      
+      // 預設 2 瓶 seeding，第一瓶用原液1，第二瓶用原液2
       const seedingFlasks = ref([
-        { days: 3, targetConc: 0.25 },
-        { days: 3, targetConc: 0.25 }
+        { days: 3, targetConc: 0.25, source: 1 },
+        { days: 3, targetConc: 0.25, source: 2 }
       ]);
-      // 預設 1 瓶放大瓶 (預設 250ml, 3 天 0.25M)
+      
+      // 預設 1 瓶放大瓶，預設用原液1
       const scaleFlasks = ref([
-        { volume: 250, days: 3, targetConc: 0.25 }
+        { volume: 250, days: 3, targetConc: 0.25, source: 1 }
       ]);
 
-      const setSeedingDays = (flask, days) => {
+      const getConc = (source) => {
+        return source === 1 ? conc1.value : conc2.value;
+      };
+
+      const setDays = (flask, days) => {
         flask.days = days;
         if(days === 2) flask.targetConc = 0.8;
         if(days === 3) flask.targetConc = 0.25;
         if(days === 4) flask.targetConc = 0.15;
       };
 
-      const setScaleDays = (flask, days) => {
-        flask.days = days;
-        if(days === 2) flask.targetConc = 0.8;
-        if(days === 3) flask.targetConc = 0.25;
-        if(days === 4) flask.targetConc = 0.15;
-      };
-
-      const calcVolume = (totalVol, targetConc) => {
-        if (!currentConc.value || currentConc.value <= 0) return { cell: 0, media: 0 };
-        const cellVol = (targetConc * totalVol) / currentConc.value;
+      const calcVolume = (flask, totalVol) => {
+        const c = getConc(flask.source);
+        if (!c || c <= 0) return { cell: 0, media: 0 };
+        const cellVol = (flask.targetConc * totalVol) / c;
         const mediaVol = totalVol - cellVol;
         return {
-          cell: (cellVol > 0 && cellVol <= totalVol) ? cellVol.toFixed(2) : '濃度過低',
+          cell: (cellVol > 0 && cellVol <= totalVol) ? cellVol.toFixed(2) : '無效濃度',
           media: (mediaVol >= 0) ? mediaVol.toFixed(2) : 0
         };
       };
 
-      const totalCellVolume = computed(() => {
-        if (!currentConc.value || currentConc.value <= 0) return '0.00';
+      const totalCell1 = computed(() => {
         let sum = 0;
-        seedingFlasks.value.forEach(f => sum += (f.targetConc * 50) / currentConc.value);
-        scaleFlasks.value.forEach(f => sum += (f.targetConc * f.volume) / currentConc.value);
+        if (conc1.value > 0) {
+          seedingFlasks.value.filter(f => f.source === 1).forEach(f => sum += (f.targetConc * 50) / conc1.value);
+          scaleFlasks.value.filter(f => f.source === 1).forEach(f => sum += (f.targetConc * f.volume) / conc1.value);
+        }
         return sum.toFixed(2);
       });
 
-      const totalMediaVolume = computed(() => {
-        if (!currentConc.value || currentConc.value <= 0) return '0.00';
+      const totalCell2 = computed(() => {
+        let sum = 0;
+        if (conc2.value > 0) {
+          seedingFlasks.value.filter(f => f.source === 2).forEach(f => sum += (f.targetConc * 50) / conc2.value);
+          scaleFlasks.value.filter(f => f.source === 2).forEach(f => sum += (f.targetConc * f.volume) / conc2.value);
+        }
+        return sum.toFixed(2);
+      });
+
+      const totalMedia = computed(() => {
         let totalVol = (seedingFlasks.value.length * 50) + scaleFlasks.value.reduce((acc, f) => acc + f.volume, 0);
-        let cellSum = parseFloat(totalCellVolume.value) || 0;
-        return (totalVol - cellSum).toFixed(2);
+        let cellSum1 = parseFloat(totalCell1.value) || 0;
+        let cellSum2 = parseFloat(totalCell2.value) || 0;
+        return (totalVol - cellSum1 - cellSum2).toFixed(2);
       });
 
       return {
-        currentConc,
-        seedingFlasks,
-        scaleFlasks,
-        setSeedingDays,
-        setScaleDays,
-        calcVolume,
-        totalCellVolume,
-        totalMediaVolume
+        conc1, conc2, seedingFlasks, scaleFlasks,
+        getConc, setDays, calcVolume,
+        totalCell1, totalCell2, totalMedia
       };
     }
   }).mount('#app');

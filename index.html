@@ -9,93 +9,162 @@
   <meta name="theme-color" content="#0284c7">
   <title>CHO-Gen</title>
 
-  <!-- 手機桌面與瀏覽器圖示 -->
+  <!-- iOS 桌面 Icon (摺耳貓與三花貓) -->
   <link rel="apple-touch-icon" href="cats-icon.jpg">
-  <link rel="icon" type="image/jpeg" href="cats-icon.jpg">
+  
+  <!-- Android 或瀏覽器分頁 Icon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%230284C7'/><path d='M35,75 Q45,70 55,75 Z' fill='%2364748B'/><path d='M95,75 Q85,70 75,75 Z' fill='%2364748B'/><circle cx='65' cy='95' r='32' fill='%2394A3B8'/><path d='M65,65 L65,75 M55,68 L60,78 M75,68 L70,78' stroke='%23475569' stroke-width='3' stroke-linecap='round'/><circle cx='52' cy='92' r='7' fill='%23FDE047'/><circle cx='78' cy='92' r='7' fill='%23FDE047'/><circle cx='52' cy='92' r='3' fill='%23000'/><circle cx='78' cy='92' r='3' fill='%23000'/><circle cx='65' cy='105' r='3' fill='%23F472B6'/><path d='M100,100 Q95,115 110,125 Q130,135 145,120 Q160,105 145,85 Q135,70 115,80 Z' fill='%23FFFFFF'/><polygon points='105,80 115,55 125,75' fill='%23FFFFFF'/><polygon points='155,85 150,55 135,75' fill='%23FFFFFF'/><path d='M125,75 Q145,65 155,85 Q140,95 125,75 Z' fill='%23F59E0B'/><path d='M100,100 Q105,85 120,80 Q115,95 100,100 Z' fill='%23334155'/><circle cx='125' cy='100' r='30' fill='%23FFFFFF'/><circle cx='112' cy='95' r='7' fill='%23A3E635'/><circle cx='138' cy='95' r='7' fill='%23A3E635'/><circle cx='112' cy='95' r='3' fill='%23000'/><circle cx='138' cy='95' r='3' fill='%23000'/><circle cx='125' cy='108' r='3' fill='%23F472B6'/><path d='M75,135 L115,135 L125,170 L65,170 Z' fill='%2338BDF8' opacity='0.9'/><rect x='85' y='120' width='20' height='15' fill='%23E0F2FE' opacity='0.9'/></svg>">
 
-  <!-- Vue.js CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.3.4/vue.global.prod.min.js"></script>
-
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
   <style>
     :root {
-      --primary: #0284c7; --bg: #f8fafc; --card-bg: #ffffff;
-      --text: #0f172a; --text-sub: #64748b; --border: #e2e8f0;
+      --primary: #0284c7;
+      --primary-bg: #e0f2fe;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #0f172a;
+      --text-sub: #64748b;
+      --accent: #10b981;
       --danger: #ef4444;
+      --border: #e2e8f0;
     }
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
-      margin: 0; padding: 16px 16px 100px;
+      margin: 0;
+      padding: 16px 16px 90px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background-color: var(--bg); color: var(--text);
+      background-color: var(--bg);
+      color: var(--text);
     }
-    header { margin-bottom: 14px; display: flex; justify-content: space-between; align-items: baseline; }
-    h1 { font-size: 1.25rem; margin: 0; font-weight: 700; color: #0369a1; }
+    header {
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    h1 { font-size: 1.3rem; margin: 0; font-weight: 700; color: #0369a1; }
     .card {
-      background: var(--card-bg); border-radius: 12px; padding: 14px;
-      margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
       border: 1px solid var(--border);
     }
-    .card-title { font-weight: 700; font-size: 0.95rem; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-    label { font-size: 0.8rem; color: var(--text-sub); font-weight: 500; }
+    .card-title {
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    label { font-size: 0.85rem; color: var(--text-sub); font-weight: 500; }
     input[type="number"] {
-      width: 100%; padding: 8px 10px; border: 1.5px solid var(--border);
-      border-radius: 8px; font-size: 1.05rem; font-weight: 600;
-      background: #fff; color: var(--text); margin-top: 4px;
+      width: 100%;
+      padding: 8px 10px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      background: #fdfdfd;
+      color: var(--text);
+      margin-top: 4px;
     }
     input[type="number"]:focus { outline: none; border-color: var(--primary); }
-    .pill-group { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
-    .pill-btn {
-      flex: 1; padding: 6px 2px; border: 1px solid var(--border); border-radius: 8px;
-      background: #f8fafc; font-size: 0.75rem; text-align: center; font-weight: 600;
-      cursor: pointer; color: var(--text-sub);
+    
+    .pill-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin: 8px 0;
     }
-    .pill-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-    .src-group { display: flex; gap: 6px; margin-bottom: 8px; align-items: center; }
-    .src-label { font-size: 0.75rem; color: #94a3b8; font-weight: 600; }
+    .pill-btn {
+      flex: 1;
+      padding: 7px 4px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #f8fafc;
+      font-size: 0.8rem;
+      text-align: center;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-sub);
+    }
+    .pill-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+    
+    /* 來源切換按鈕樣式 */
+    .src-group { display: flex; gap: 4px; margin-bottom: 8px; align-items: center; }
+    .src-label { font-size: 0.75rem; color: #94a3b8; margin-right: 4px; font-weight: 600;}
     .src-btn {
-      padding: 3px 10px; border: 1px solid var(--border); border-radius: 6px;
+      padding: 4px 12px; border: 1px solid var(--border); border-radius: 6px; 
       font-size: 0.75rem; font-weight: 600; background: #fff; color: var(--text-sub);
     }
     .src-btn.active { background: #475569; color: #fff; border-color: #475569; }
+
     .chip {
-      padding: 4px 8px; border-radius: 14px; border: 1px solid var(--border);
-      background: #fff; font-size: 0.75rem; font-weight: 600; cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #fff;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
     }
     .chip.active { background: #0369a1; color: #fff; border-color: #0369a1; }
     .result-box {
-      background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;
-      padding: 8px 10px; margin-top: 8px; font-size: 0.85rem;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 0.9rem;
     }
-    .result-line { display: flex; justify-content: space-between; margin-bottom: 2px; }
+    .result-line { display: flex; justify-content: space-between; margin-bottom: 4px; }
     .result-line:last-child { margin-bottom: 0; }
     .highlight-cell { color: #15803d; font-weight: 700; }
     .highlight-media { color: #0369a1; font-weight: 700; }
     .btn-add {
-      width: 100%; padding: 8px; border: 1.5px dashed #94a3b8; border-radius: 8px;
-      background: transparent; color: #475569; font-weight: 600; font-size: 0.85rem; cursor: pointer;
+      width: 100%;
+      padding: 10px;
+      border: 1.5px dashed #94a3b8;
+      border-radius: 10px;
+      background: transparent;
+      color: #475569;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
     }
-    .del-btn { color: var(--danger); font-size: 0.75rem; cursor: pointer; border: none; background: none; }
+    .del-btn { color: var(--danger); font-size: 0.8rem; cursor: pointer; border: none; background: none; }
     .bottom-bar {
-      position: fixed; bottom: 0; left: 0; right: 0; background: #0f172a;
-      color: white; padding: 10px 14px; display: flex; justify-content: space-between;
-      align-items: center; box-shadow: 0 -2px 10px rgba(0,0,0,0.15); z-index: 100;
-    }
-    .counter-btn {
-      width: 28px; height: 28px; border-radius: 14px; border: 1px solid #cbd5e1;
-      background: #f1f5f9; font-size: 1.1rem; font-weight: bold; color: #475569;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #0f172a;
+      color: white;
+      padding: 12px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+      z-index: 100;
     }
   </style>
 </head>
 <body>
 <div id="app">
   <header>
-    <h1>🧪 CHO-Gen</h1>
-    <span style="font-size: 0.75rem; color: var(--text-sub);">單位: ×10⁶/mL</span>
+    <h1>🧪 CHO-Gen 繼代計算</h1>
+    <span style="font-size: 0.8rem; color: var(--text-sub);">單位: ×10⁶/mL</span>
   </header>
 
-  <!-- 原液濃度輸入 (Seeding 專用) -->
-  <div class="card" style="border-left: 4px solid var(--primary); display: flex; gap: 10px;">
+  <!-- 原液濃度輸入 (並排，僅供 Seeding 使用) -->
+  <div class="card" style="border-left: 4px solid var(--primary); display: flex; gap: 12px;">
     <div style="flex: 1;">
       <label>Seeding 原液 1</label>
       <input type="number" step="0.1" v-model.number="conc1" placeholder="M">
@@ -106,261 +175,225 @@
     </div>
   </div>
 
-  <!-- SEEDING 區塊 -->
+  <!-- SEEDING 區塊 (固定 50ml) -->
   <div class="card">
     <div class="card-title">
       <span>🌱 Seeding (固定 50 mL)</span>
-      <span style="font-size:0.75rem; font-weight:normal;">{{ seedingFlasks.length }} 瓶</span>
+      <span style="font-size:0.8rem; font-weight:normal;">{{ seedingFlasks.length }} 瓶</span>
     </div>
-    <div v-for="(flask, idx) in seedingFlasks" :key="'seed-'+idx" style="margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed var(--border);">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px;">
-        <span style="font-size:0.8rem; font-weight:700; color:#334155;">瓶 #{{ idx + 1 }}</span>
+
+    <div v-for="(flask, idx) in seedingFlasks" :key="'seed-'+idx" style="margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px dashed var(--border);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+        <span style="font-size:0.85rem; font-weight:700; color:#334155;">瓶 #{{ idx + 1 }}</span>
         <button class="del-btn" @click="seedingFlasks.splice(idx, 1)">刪除</button>
       </div>
+      
+      <!-- 選擇來源原液 -->
       <div class="src-group">
-        <span class="src-label">來源:</span>
+        <span class="src-label">細胞來源:</span>
         <button class="src-btn" :class="{active: flask.source === 1}" @click="flask.source = 1">原液 1</button>
         <button class="src-btn" :class="{active: flask.source === 2}" @click="flask.source = 2">原液 2</button>
       </div>
+
+      <!-- 天數選擇 -->
       <div class="pill-group">
         <button class="pill-btn" :class="{active: flask.days === 2}" @click="setDays(flask, 2)">2天(0.8M)</button>
         <button class="pill-btn" :class="{active: flask.days === 3}" @click="setDays(flask, 3)">3天(0.25M)</button>
         <button class="pill-btn" :class="{active: flask.days === 4}" @click="setDays(flask, 4)">4天(0.15M)</button>
       </div>
+
+      <!-- 計算結果 -->
       <div class="result-box" v-if="getSeedConc(flask.source) > 0">
         <div class="result-line">
-          <span>取原液 {{ flask.source }}：</span><span class="highlight-cell">{{ calcSeedVolume(flask).cell }} mL</span>
+          <span>取原液 {{ flask.source }}：</span>
+          <span class="highlight-cell">{{ calcSeedVolume(flask).cell }} mL</span>
         </div>
         <div class="result-line">
-          <span>補培養基：</span><span class="highlight-media">{{ calcSeedVolume(flask).media }} mL</span>
+          <span>補培養基：</span>
+          <span class="highlight-media">{{ calcSeedVolume(flask).media }} mL</span>
         </div>
       </div>
     </div>
     <button class="btn-add" @click="seedingFlasks.push({ days: 3, targetConc: 0.25, source: 1 })">＋ 增加一瓶 Seeding</button>
   </div>
 
-  <!-- 放大區塊 -->
+  <!-- 放大區塊 (Scale-up) -->
   <div class="card">
     <div class="card-title" style="color: #6b21a8;">
       <span>🚀 放大培養 (獨立原液)</span>
-      <span style="font-size:0.75rem; font-weight:normal;">{{ scaleFlasks.length }} 瓶</span>
+      <span style="font-size:0.8rem; font-weight:normal;">{{ scaleFlasks.length }} 瓶</span>
     </div>
-    <div v-for="(flask, idx) in scaleFlasks" :key="'scale-'+idx" style="margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px dashed var(--border);">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 4px;">
-        <span style="font-size:0.8rem; font-weight:700; color:#334155;">放大瓶 #{{ idx + 1 }}</span>
+
+    <div v-for="(flask, idx) in scaleFlasks" :key="'scale-'+idx" style="margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px dashed var(--border);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px;">
+        <span style="font-size:0.85rem; font-weight:700; color:#334155;">放大瓶 #{{ idx + 1 }}</span>
         <button class="del-btn" @click="scaleFlasks.splice(idx, 1)">移除</button>
       </div>
-      <div style="margin-bottom: 6px;">
-        <label>使用之原液濃度 (M)</label>
+
+      <!-- 放大專用的獨立濃度輸入 -->
+      <div style="margin-bottom: 8px;">
+        <label>此瓶使用的原液濃度 (M)</label>
         <input type="number" step="0.1" v-model.number="flask.sourceConc" placeholder="例如: 3.5">
       </div>
-      <div class="pill-group" style="margin: 4px 0 6px;">
-        <button v-for="v in [200, 250, 300, 350, 400, 900]" :key="v" class="chip" :class="{active: flask.volume === v}" @click="flask.volume = v">{{ v }}</button>
+
+      <!-- 快捷容積選擇 -->
+      <div style="font-size: 0.75rem; color: #64748b; font-weight: 600; margin-top: 8px;">設定總體積 (mL)</div>
+      <div class="pill-group" style="margin: 4px 0 8px;">
+        <button v-for="v in [200, 250, 300, 350, 400, 900]" :key="v" 
+                class="chip" :class="{active: flask.volume === v}" 
+                @click="flask.volume = v">{{ v }}</button>
       </div>
+
+      <!-- 目標天數選擇 -->
       <div class="pill-group">
         <button class="pill-btn" :class="{active: flask.days === 2}" @click="setDays(flask, 2)">2天(0.8M)</button>
         <button class="pill-btn" :class="{active: flask.days === 3}" @click="setDays(flask, 3)">3天(0.25M)</button>
         <button class="pill-btn" :class="{active: flask.days === 4}" @click="setDays(flask, 4)">4天(0.15M)</button>
       </div>
+
+      <!-- 計算結果 -->
       <div class="result-box" v-if="flask.sourceConc > 0">
         <div class="result-line">
-          <span>取原液：</span><span class="highlight-cell">{{ calcScaleVolume(flask).cell }} mL</span>
+          <span style="font-size:0.8rem; color:#64748b;">目標體積：{{ flask.volume }} mL ({{ flask.targetConc }}M)</span>
         </div>
         <div class="result-line">
-          <span>補培養基：</span><span class="highlight-media">{{ calcScaleVolume(flask).media }} mL</span>
+          <span>取放大原液：</span>
+          <span class="highlight-cell">{{ calcScaleVolume(flask).cell }} mL</span>
+        </div>
+        <div class="result-line">
+          <span>補培養基：</span>
+          <span class="highlight-media">{{ calcScaleVolume(flask).media }} mL</span>
         </div>
       </div>
     </div>
+
     <button class="btn-add" style="border-color: #d8b4fe; color: #7e22ce;" @click="scaleFlasks.push({ volume: 250, days: 3, targetConc: 0.25, sourceConc: '' })">＋ 新增放大瓶</button>
   </div>
 
-  <!-- Transfection 區塊 -->
-  <div class="card" style="border-left: 4px solid #f59e0b;">
-    <div class="card-title" style="color: #d97706;">
-      <span>🧬 Transfection (換液分裝)</span>
-    </div>
-    <div style="display: flex; gap: 10px; margin-bottom: 8px;">
-      <div style="flex: 2;">
-        <label>搖散後測得濃度</label>
-        <input type="number" step="0.1" v-model.number="transfConc" placeholder="M">
-      </div>
-      <div style="flex: 1;">
-        <label>目標濃度</label>
-        <input type="number" step="0.1" v-model.number="transfTarget" style="background: #fffbeb;">
-      </div>
-    </div>
-
-    <!-- 900ml 大瓶 -->
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-top: 1px dashed var(--border);">
-      <label style="font-size: 0.9rem; font-weight: 700; color: #334155; display:flex; align-items:center; cursor:pointer;">
-        <input type="checkbox" v-model="has900ml" style="transform: scale(1.2); margin-right: 8px;">
-        900 mL 大瓶 (1瓶)
-      </label>
-    </div>
-    <div class="result-box" v-if="has900ml && transfConc > 0" style="background: #fffbeb; border-color: #fde68a; margin-top: 0; margin-bottom: 8px;">
-      <div class="result-line">
-        <span>取細胞原液：</span><span style="color: #b45309; font-weight: 700;">{{ calcTransf(900).cell }} mL</span>
-      </div>
-      <div class="result-line">
-        <span>補培養基：</span><span class="highlight-media">{{ calcTransf(900).media }} mL</span>
-      </div>
-    </div>
-
-    <!-- 27ml 小瓶 -->
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-top: 1px dashed var(--border);">
-      <span style="font-size: 0.9rem; font-weight: 700; color: #334155;">27 mL 小瓶數量</span>
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <button class="counter-btn" @click="if(smallCount > 0) smallCount--">-</button>
-        <span style="font-size: 1.1rem; font-weight: 700; width: 20px; text-align: center;">{{ smallCount }}</span>
-        <button class="counter-btn" @click="smallCount++">+</button>
-      </div>
-    </div>
-    <div class="result-box" v-if="smallCount > 0 && transfConc > 0" style="background: #fffbeb; border-color: #fde68a; margin-top: 0;">
-      <div class="result-line">
-        <span>單瓶取原液：</span><span style="color: #b45309; font-weight: 700;">{{ calcTransf(27).cell }} mL</span>
-      </div>
-      <div class="result-line">
-        <span>單瓶補培養基：</span><span class="highlight-media">{{ calcTransf(27).media }} mL</span>
-      </div>
-    </div>
-
-    <div v-if="transfConc > 0 && (has900ml || smallCount > 0)" style="margin-top: 10px; font-size: 0.8rem; color: #64748b; text-align: right;">
-      總需高濃度細胞液: <strong style="color: #b45309;">{{ totalTransfCell }} mL</strong>
-    </div>
-  </div>
-
-  <!-- 底部總結列 -->
+  <!-- 底部即時總結列 -->
   <div class="bottom-bar">
-    <div style="display:flex; gap: 10px;">
-      <div><span style="font-size:0.65rem; color:#94a3b8;">Seed 1:</span> <strong style="color:#38bdf8;">{{ totalSeed1 }}</strong></div>
-      <div><span style="font-size:0.65rem; color:#94a3b8;">Seed 2:</span> <strong style="color:#38bdf8;">{{ totalSeed2 }}</strong></div>
-      <div><span style="font-size:0.65rem; color:#94a3b8;">放大:</span> <strong style="color:#c084fc;">{{ totalScaleCell }}</strong></div>
+    <div style="display:flex; gap: 14px;">
+      <div>
+        <div style="font-size:0.7rem; color:#94a3b8;">Seed 1</div>
+        <div style="font-size:1.1rem; font-weight:700; color:#38bdf8;">{{ totalSeed1 }} <span style="font-size:0.7rem">mL</span></div>
+      </div>
+      <div>
+        <div style="font-size:0.7rem; color:#94a3b8;">Seed 2</div>
+        <div style="font-size:1.1rem; font-weight:700; color:#38bdf8;">{{ totalSeed2 }} <span style="font-size:0.7rem">mL</span></div>
+      </div>
+      <div>
+        <div style="font-size:0.7rem; color:#94a3b8;">放大細胞液</div>
+        <div style="font-size:1.1rem; font-weight:700; color:#c084fc;">{{ totalScaleCell }} <span style="font-size:0.7rem">mL</span></div>
+      </div>
     </div>
-    <div>
-      <span style="font-size:0.65rem; color:#94a3b8;">日常補液:</span> <strong style="color: #6ee7b7;">{{ totalMedia }} mL</strong>
+    <div style="text-align: right;">
+      <div style="font-size:0.75rem; color:#94a3b8;">總補培養基</div>
+      <div style="font-size:1.1rem; font-weight:700; color: #6ee7b7;">{{ totalMedia }} <span style="font-size:0.8rem">mL</span></div>
     </div>
   </div>
 </div>
 
 <script>
-  window.addEventListener('DOMContentLoaded', () => {
-    const { createApp, ref, computed } = Vue;
-    createApp({
-      setup() {
-        const conc1 = ref('');
-        const conc2 = ref('');
-        const seedingFlasks = ref([
-          { days: 3, targetConc: 0.25, source: 1 },
-          { days: 3, targetConc: 0.25, source: 2 }
-        ]);
-        const scaleFlasks = ref([
-          { volume: 250, days: 3, targetConc: 0.25, sourceConc: '' }
-        ]);
-        const transfConc = ref('');
-        const transfTarget = ref(4.4);
-        const has900ml = ref(true);
-        const smallCount = ref(0);
+  const { createApp, ref, computed } = Vue;
+  createApp({
+    setup() {
+      const conc1 = ref('');
+      const conc2 = ref('');
+      
+      const seedingFlasks = ref([
+        { days: 3, targetConc: 0.25, source: 1 },
+        { days: 3, targetConc: 0.25, source: 2 }
+      ]);
+      
+      const scaleFlasks = ref([
+        { volume: 250, days: 3, targetConc: 0.25, sourceConc: '' }
+      ]);
 
-        const getSeedConc = (source) => source === 1 ? Number(conc1.value) : Number(conc2.value);
+      const getSeedConc = (source) => {
+        return source === 1 ? conc1.value : conc2.value;
+      };
 
-        const setDays = (flask, days) => {
-          flask.days = days;
-          if (days === 2) flask.targetConc = 0.8;
-          if (days === 3) flask.targetConc = 0.25;
-          if (days === 4) flask.targetConc = 0.15;
-        };
+      const setDays = (flask, days) => {
+        flask.days = days;
+        if(days === 2) flask.targetConc = 0.8;
+        if(days === 3) flask.targetConc = 0.25;
+        if(days === 4) flask.targetConc = 0.15;
+      };
 
-        const calcSeedVolume = (flask) => {
-          const c = getSeedConc(flask.source);
-          if (!c || c <= 0) return { cell: '0.0', media: '0.0' };
-          const cellVol = (flask.targetConc * 50) / c;
-          return {
-            cell: cellVol <= 50 ? cellVol.toFixed(1) : '無效',
-            media: Math.max(0, 50 - cellVol).toFixed(1)
-          };
-        };
-
-        const calcScaleVolume = (flask) => {
-          const c = Number(flask.sourceConc);
-          if (!c || c <= 0) return { cell: '0.0', media: '0.0' };
-          const cellVol = (flask.targetConc * flask.volume) / c;
-          return {
-            cell: cellVol <= flask.volume ? cellVol.toFixed(1) : '無效',
-            media: Math.max(0, flask.volume - cellVol).toFixed(1)
-          };
-        };
-
-        const calcTransf = (vol) => {
-          const c = Number(transfConc.value);
-          if (!c || c <= 0) return { cell: '0.0', media: '0.0' };
-          const cellVol = (transfTarget.value * vol) / c;
-          return {
-            cell: cellVol.toFixed(1),
-            media: Math.max(0, vol - cellVol).toFixed(1)
-          };
-        };
-
-        const totalTransfCell = computed(() => {
-          const c = Number(transfConc.value);
-          let sum = 0;
-          if (c > 0) {
-            if (has900ml.value) sum += (transfTarget.value * 900) / c;
-            if (smallCount.value > 0) sum += ((transfTarget.value * 27) / c) * smallCount.value;
-          }
-          return sum.toFixed(1);
-        });
-
-        const totalSeed1 = computed(() => {
-          const c = Number(conc1.value);
-          let sum = 0;
-          if (c > 0) seedingFlasks.value.filter(f => f.source === 1).forEach(f => sum += (f.targetConc * 50) / c);
-          return sum.toFixed(1);
-        });
-
-        const totalSeed2 = computed(() => {
-          const c = Number(conc2.value);
-          let sum = 0;
-          if (c > 0) seedingFlasks.value.filter(f => f.source === 2).forEach(f => sum += (f.targetConc * 50) / c);
-          return sum.toFixed(1);
-        });
-
-        const totalScaleCell = computed(() => {
-          let sum = 0;
-          scaleFlasks.value.forEach(f => {
-            const c = Number(f.sourceConc);
-            if (c > 0) sum += (f.targetConc * f.volume) / c;
-          });
-          return sum.toFixed(1);
-        });
-
-        const totalMedia = computed(() => {
-          let mediaSum = 0;
-          seedingFlasks.value.forEach(f => {
-            const c = getSeedConc(f.source);
-            if (c > 0) {
-              const cellVol = (f.targetConc * 50) / c;
-              if (cellVol <= 50) mediaSum += (50 - cellVol);
-            }
-          });
-          scaleFlasks.value.forEach(f => {
-            const c = Number(f.sourceConc);
-            if (c > 0) {
-              const cellVol = (f.targetConc * f.volume) / c;
-              if (cellVol <= f.volume) mediaSum += (f.volume - cellVol);
-            }
-          });
-          return mediaSum.toFixed(1);
-        });
-
+      const calcSeedVolume = (flask) => {
+        const c = getSeedConc(flask.source);
+        if (!c || c <= 0) return { cell: 0, media: 0 };
+        const cellVol = (flask.targetConc * 50) / c;
+        const mediaVol = 50 - cellVol;
         return {
-          conc1, conc2, seedingFlasks, scaleFlasks,
-          transfConc, transfTarget, has900ml, smallCount,
-          getSeedConc, setDays, calcSeedVolume, calcScaleVolume, calcTransf, totalTransfCell,
-          totalSeed1, totalSeed2, totalScaleCell, totalMedia
+          cell: (cellVol > 0 && cellVol <= 50) ? cellVol.toFixed(1) : '無效',
+          media: (mediaVol >= 0) ? mediaVol.toFixed(1) : 0
         };
-      }
-    }).mount('#app');
-  });
+      };
+
+      const calcScaleVolume = (flask) => {
+        const c = flask.sourceConc;
+        if (!c || c <= 0) return { cell: 0, media: 0 };
+        const cellVol = (flask.targetConc * flask.volume) / c;
+        const mediaVol = flask.volume - cellVol;
+        return {
+          cell: (cellVol > 0 && cellVol <= flask.volume) ? cellVol.toFixed(1) : '無效',
+          media: (mediaVol >= 0) ? mediaVol.toFixed(1) : 0
+        };
+      };
+
+      const totalSeed1 = computed(() => {
+        let sum = 0;
+        if (conc1.value > 0) {
+          seedingFlasks.value.filter(f => f.source === 1).forEach(f => sum += (f.targetConc * 50) / conc1.value);
+        }
+        return sum.toFixed(1);
+      });
+
+      const totalSeed2 = computed(() => {
+        let sum = 0;
+        if (conc2.value > 0) {
+          seedingFlasks.value.filter(f => f.source === 2).forEach(f => sum += (f.targetConc * 50) / conc2.value);
+        }
+        return sum.toFixed(1);
+      });
+
+      const totalScaleCell = computed(() => {
+        let sum = 0;
+        scaleFlasks.value.forEach(f => {
+          if (f.sourceConc > 0) sum += (f.targetConc * f.volume) / f.sourceConc;
+        });
+        return sum.toFixed(1);
+      });
+
+      const totalMedia = computed(() => {
+        let seedMediaSum = 0;
+        seedingFlasks.value.forEach(f => {
+          const c = getSeedConc(f.source);
+          if (c > 0) {
+            const cellVol = (f.targetConc * 50) / c;
+            if (cellVol <= 50) seedMediaSum += (50 - cellVol);
+          }
+        });
+
+        let scaleMediaSum = 0;
+        scaleFlasks.value.forEach(f => {
+          if (f.sourceConc > 0) {
+            const cellVol = (f.targetConc * f.volume) / f.sourceConc;
+            if (cellVol <= f.volume) scaleMediaSum += (f.volume - cellVol);
+          }
+        });
+
+        return (seedMediaSum + scaleMediaSum).toFixed(1);
+      });
+
+      return {
+        conc1, conc2, seedingFlasks, scaleFlasks,
+        getSeedConc, setDays, calcSeedVolume, calcScaleVolume,
+        totalSeed1, totalSeed2, totalScaleCell, totalMedia
+      };
+    }
+  }).mount('#app');
 </script>
 </body>
 </html>

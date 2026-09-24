@@ -250,6 +250,8 @@
       </div>
       <div class="pill-group" style="margin: 8px 0;">
         <button class="chip chip-purple" :class="{active: lg.volume === 360}" @click="lg.volume = 360">360 mL</button>
+        <!-- 加入 540 mL 按鈕 -->
+        <button class="chip chip-purple" :class="{active: lg.volume === 540}" @click="lg.volume = 540">540 mL</button>
         <button class="chip chip-purple" :class="{active: lg.volume === 900}" @click="lg.volume = 900">900 mL</button>
       </div>
       <div class="result-box" style="background: #fff; border-color:#e2e8f0; margin-top: 4px;" v-if="transformConc > 0">
@@ -257,6 +259,7 @@
         <div class="result-line">補新鮮培養基：<span class="highlight-media">{{ calcTransform(lg.volume).media }} mL</span></div>
       </div>
     </div>
+    <!-- 預設新增帶入 900 mL -->
     <button class="btn-add" style="border-color:#c4b5fd; color:#6d28d9; padding: 8px; font-size:0.85rem;" @click="transformLarge.push({ volume: 900 })">＋ 新增大瓶</button>
 
     <!-- Transform 小瓶 -->
@@ -315,7 +318,7 @@
       const scaleFlasks = ref([{ volume: 250, days: 3, targetConc: 0.25, source: 1, customConc: '' }]);
       
       const transformConc = ref('');
-      const transformLarge = ref([{ volume: 900 }]);
+      const transformLarge = ref([{ volume: 900 }]); // 預設新增的體積為 900
       const tSmall = ref({ count: 5, totalVol: 145 });
 
       const updateSmallVolume = () => {
